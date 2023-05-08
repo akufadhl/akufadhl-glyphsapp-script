@@ -44,7 +44,7 @@ class kernList:
 			selectionCallback = self.clickCallback,
 			editCallback = self.editKernValue
 		)
-		self.w.language = vanilla.PopUpButton('auto', ['javanese', 'kawi'])
+		self.w.language = vanilla.PopUpButton('auto', ['javanese', 'balinese'])
 		self.w.masterSelect = vanilla.PopUpButton("auto", self.getMaster(), callback=self.getMasterId)
 		
 		rules = [
@@ -77,9 +77,9 @@ class kernList:
 				if self.w.language.getItem() == 'javanese':
 					print(f"/ka-java/suku-java/{x}{self.belowSplitter(y,'javanese')}/ka-java/la-java")
 					text += f"/ka-java/suku-java/{x}{self.belowSplitter(y,'javanese')}/ka-java/la-java"
-				elif self.w.language.getItem() == 'kawi':
-					print(f"/ka-kawi/vowelU-kawi/{x}{self.belowSplitter(y,'kawi')}/la-kawi/ka-kawi")
-					text += f"/ka-kawi/vowelU-kawi/{x}{self.belowSplitter(y,'kawi')}/la-kawi/ka-kawi"
+				elif self.w.language.getItem() == 'balinese':
+					print(f"/ka-bali/suku-bali/{x}{self.belowSplitter(y,'bali')}/la-bali/ka-bali")
+					text += f"/ka-bali/suku-bali/{x}{self.belowSplitter(y,'bali')}/la-bali/ka-bali"
 
 		font = Glyphs.font
 		if font.currentTab:
@@ -99,7 +99,7 @@ class kernList:
 			
 	def belowSplitter(self, glyphname, lang):
 		text = ""
-		if lang == 'kawi':
+		if lang == 'balinese':
 			glyph = f"/{glyphname}"
 			listHold = glyph.split('.')
 			print(listHold)
