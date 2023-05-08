@@ -105,7 +105,7 @@ class kernList:
 			print(listHold)
 			listHold.pop()
 			print(listHold)
-			listHold.insert(0, '/virama-kawi')
+			listHold.insert(0, '/adegadeg-bali')
 			print(listHold)
 			text = "".join(listHold)
 			
