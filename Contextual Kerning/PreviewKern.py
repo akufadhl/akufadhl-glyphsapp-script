@@ -18,17 +18,21 @@ class kernList:
 			dict(
                 identifier="id",
                 title="id",
-                sortable=True
+                sortable=True,
+				editable=False
             ),
             dict(
                 identifier="affected",
                 title="affected",
-                sortable=True
+                sortable=True,
+				editable=False
             ),
             dict(
                 identifier="affecting",
                 title="affecting",
-                sortable=True
+                sortable=True,
+				editable=False
+
             ),
             dict(
                 identifier="value",
@@ -67,19 +71,25 @@ class kernList:
 		listId = sender.getSelection()
 		kernList = sender.get()
 		kernDict = kernList[listId[0]]
-		affected = [x for x in kernDict['affected'].split(" ")]
-		affecting = [x for x in kernDict['affecting'].split(" ")]
+		affected = [x for x in kernDict['affected'].split("_")]
+		affecting = [x for x in kernDict['affecting'].split("_")]
 		value = kernDict['value']
 		
 		text = ""
 		for x in affected:
 			for y in affecting:
+				if self.w.language.getItem() == 'balinese':
+					# print(f"/ka-java/suku-java/{x}{self.belowSplitter(y,'javanese')}/ka-java/la-java")
+					text += f"/ka-bali/suku-bali/{x}{self.belowSplitter(y,'balinese')}/ka-bali/la-bali"
 				if self.w.language.getItem() == 'javanese':
-					print(f"/ka-java/suku-java/{x}{self.belowSplitter(y,'javanese')}/ka-java/la-java")
+					# print(f"/ka-java/suku-java/{x}{self.belowSplitter(y,'javanese')}/ka-java/la-java")
 					text += f"/ka-java/suku-java/{x}{self.belowSplitter(y,'javanese')}/ka-java/la-java"
+<<<<<<< HEAD
 				elif self.w.language.getItem() == 'balinese':
 					print(f"/ka-bali/suku-bali/{x}{self.belowSplitter(y,'bali')}/la-bali/ka-bali")
 					text += f"/ka-bali/suku-bali/{x}{self.belowSplitter(y,'bali')}/la-bali/ka-bali"
+=======
+>>>>>>> 8827b60 (update preview kern/py)
 
 		font = Glyphs.font
 		if font.currentTab:
@@ -92,26 +102,31 @@ class kernList:
 			font.newTab(text)
 			PreviewTextWindow.open()
 			font = PreviewTextWindow.font
-			print(self.w.masterSelect.get())
 			PreviewTextWindow.text = font.currentTab.text
 			PreviewTextWindow.fontSize = 150
 			self.w.makeKey()
 			
 	def belowSplitter(self, glyphname, lang):
 		text = ""
+<<<<<<< HEAD
+=======
+		
+>>>>>>> 8827b60 (update preview kern/py)
 		if lang == 'balinese':
 			glyph = f"/{glyphname}"
 			listHold = glyph.split('.')
-			print(listHold)
 			listHold.pop()
+<<<<<<< HEAD
 			print(listHold)
 			listHold.insert(0, '/adegadeg-bali')
 			print(listHold)
+=======
+			listHold.insert(0, '/adegadeg-bali')
+>>>>>>> 8827b60 (update preview kern/py)
 			text = "".join(listHold)
 			
 		if lang == 'javanese':
 			listHold = glyphname.split('_')
-			print(listHold)
 			newList = []
 			for x in listHold:
 				replaced = x.replace('Pas', '-java')
@@ -157,10 +172,8 @@ class kernList:
 		for i, a in enumerate(font.numbers):
 			if a:
 				name_decoded = self.decodeBase64(a.name)
-				print(name_decoded)
 				names = name_decoded.split("_")
 				affected = names[0]
-				print(names)
 				affecting = names[1]
 				newDict = dict(
 					id = a.name,
@@ -169,6 +182,7 @@ class kernList:
 					value = font.masters[self.masterIndex].numberValueValueForName_(a.name)
 				)
 				items.append(newDict)
+		
 		return items
 
 if font:
