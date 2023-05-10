@@ -79,10 +79,8 @@ class kernList:
 		for x in affected:
 			for y in affecting:
 				if self.w.language.getItem() == 'balinese':
-					# print(f"/ka-java/suku-java/{x}{self.belowSplitter(y,'javanese')}/ka-java/la-java")
 					text += f"/ka-bali/suku-bali/{x}{self.belowSplitter(y,'balinese')}/ka-bali/la-bali"
 				if self.w.language.getItem() == 'javanese':
-					# print(f"/ka-java/suku-java/{x}{self.belowSplitter(y,'javanese')}/ka-java/la-java")
 					text += f"/ka-java/suku-java/{x}{self.belowSplitter(y,'javanese')}/ka-java/la-java"
 
 		font = Glyphs.font
@@ -128,8 +126,11 @@ class kernList:
 			masterIndex = self.w.masterSelect.get()
 			value = int(kernList[listId]['value'])
 			kernId = kernList[listId]['id']
-			font.masters[masterIndex].setNumberValueValue_forName_(value, kernId)
-			font.features.update()
+			masterId = font.masters[masterIndex].id
+			font.masters[masterId].setNumberValueValue_forName_(value, kernId)
+			value1 = font.masters[masterId].numberValueValueForName_(kernId)
+			print(font.masters[masterId], kernId, value1)
+#			font.features.update()
 		except:
 			print(traceback.format_exc())
 
@@ -144,22 +145,20 @@ class kernList:
 			PreviewTextWindow.instanceIndex = regularIndex
 		except:
 			print(traceback.format_exc())
-			
-	def decodeBase64(self, base64String):
-		base64_bytes = base64String.encode('utf-8')
-		name_bytes = base64.b64decode(base64_bytes)
-		name = name_bytes.decode('utf-8')
+
 	
-		return name
-		
+	def replaceChar(self, text):
+		replacements = {'9': '-', '8': '.'}
+		newString = text.replace("9", "-").replace("8", ".")
+		return newString
+	
 	def kerningList(self, masterIndex):
 		items = []
 		for i, a in enumerate(font.numbers):
 			if a:
-				name_decoded = self.decodeBase64(a.name)
-				names = name_decoded.split("_")
-				affected = names[0]
-				affecting = names[1]
+				names = a.name.split("_")
+				affected = self.replaceChar(names[0])
+				affecting = self.replaceChar(names[1])
 				newDict = dict(
 					id = a.name,
 					affected = affected,
@@ -169,6 +168,7 @@ class kernList:
 				items.append(newDict)
 		
 		return items
+
 
 if font:
 	kernList()

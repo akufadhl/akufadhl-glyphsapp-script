@@ -72,7 +72,14 @@ class WindowKern():
 			newDict[value] = name
 		
 		return newDict
-	
+
+	def replaceChar(self,text):
+		replacements = {'-': '9', '.': '8'}
+		replaced_chars = [replacements.get(char, char) for char in text]
+		newString = ''.join(replaced_chars)
+
+		return newString
+		
 	def printAll(self, sender):
 		anchorConst = self.w.group2.editText2.get()
 		anchorConjunct = self.w.group3.editText3.get()
@@ -86,10 +93,7 @@ class WindowKern():
 		for glyph in thisFont.glyphs:
 			for layer in glyph.layers:
 				if glyph.script == script and int(layer.bounds.origin.y) < -20 and glyph.export == 1:
-					print(script)
 					HasDescenders.add(glyph.name)
-		
-		
 		
 		features = set()
 		for master in thisFont.masters:
@@ -105,17 +109,16 @@ class WindowKern():
 			for glyph in thisFont.glyphs:
 				for layer in glyph.layers:
 					if glyph.script == script and int(layer.bounds.origin.y) < -20 and glyph.export == 1:
-						#print(glyph.name, int(layer.bounds.origin.y))
 						HasDescenders.add(glyph.name)
 	
 			for glyph in thisFont.glyphs:
 				for layer in glyph.layers:
 					for anchor in layer.anchors:
-						if glyph.category == "Letter" and glyph.export == 1 and glyph.script == script:
+						if glyph.category == "Letter" and glyph.export == 1 and glyph.script == script and '.post' not in glyph.name:
 							if anchor.name == anchorConst:
 								letters.append((int(layer.bounds.size.width),glyph.name))
 	
-						if glyph.category == "Mark" and glyph.export == 1 and glyph.script == script:
+						if glyph.category == "Mark" and glyph.export == 1 and glyph.script == script and '.post' not in glyph.name:
 							if anchor.name == anchorConjunct:
 								pasangans.append((int(layer.anchors[anchorConjunct].position.x) - int(layer.bounds.origin.x), glyph.name))
 			
@@ -125,13 +128,14 @@ class WindowKern():
 			features = set()
 			for v, w in letter.items():
 				for x, y in pasangan.items():
-					if x > v:
+					if x > v and (x-v) > int(threshold):
 						currentName = f"{w}_{y}"
-						name = self.encodeBase64(currentName)
+						name = self.replaceChar(currentName)
+#						name = self.encodeBase64(currentName)
 						value = int((x - v) + int(threshold))
 						master.setNumberValueValue_forName_(value, name)
 						features.add(f"pos @LetterWithBelow [{w}]' [{y}] <${{{name}}} 0 ${{{name}}} 0>;\n")
-						print(features)
+						print(name)
 		if len(script) == 0:
 			Message("Select Script First")
 		elif len(features) == 0:
