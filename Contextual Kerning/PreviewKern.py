@@ -84,12 +84,6 @@ class kernList:
 				if self.w.language.getItem() == 'javanese':
 					# print(f"/ka-java/suku-java/{x}{self.belowSplitter(y,'javanese')}/ka-java/la-java")
 					text += f"/ka-java/suku-java/{x}{self.belowSplitter(y,'javanese')}/ka-java/la-java"
-<<<<<<< HEAD
-				elif self.w.language.getItem() == 'balinese':
-					print(f"/ka-bali/suku-bali/{x}{self.belowSplitter(y,'bali')}/la-bali/ka-bali")
-					text += f"/ka-bali/suku-bali/{x}{self.belowSplitter(y,'bali')}/la-bali/ka-bali"
-=======
->>>>>>> 8827b60 (update preview kern/py)
 
 		font = Glyphs.font
 		if font.currentTab:
@@ -108,21 +102,12 @@ class kernList:
 			
 	def belowSplitter(self, glyphname, lang):
 		text = ""
-<<<<<<< HEAD
-=======
 		
->>>>>>> 8827b60 (update preview kern/py)
 		if lang == 'balinese':
 			glyph = f"/{glyphname}"
 			listHold = glyph.split('.')
 			listHold.pop()
-<<<<<<< HEAD
-			print(listHold)
 			listHold.insert(0, '/adegadeg-bali')
-			print(listHold)
-=======
-			listHold.insert(0, '/adegadeg-bali')
->>>>>>> 8827b60 (update preview kern/py)
 			text = "".join(listHold)
 			
 		if lang == 'javanese':

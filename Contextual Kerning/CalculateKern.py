@@ -12,7 +12,7 @@ class WindowKern():
 		self.w = vanilla.Window((350, 200), "Generate Kern Feature")
 		self.w.group1 = vanilla.Group('auto')
 		self.w.group1.text = vanilla.TextBox('auto','Script :')
-		self.w.group1.popUpButton = vanilla.PopUpButton('auto', ["javanese", "balinese", "kawi"])
+		self.w.group1.popUpButton = vanilla.PopUpButton('auto', ["javanese", "balinese"])
 		self.w.group2 = vanilla.Group('auto')
 		self.w.group2.text2 = vanilla.TextBox('auto','Consonant Anchor :')
 		self.w.group2.editText2 = vanilla.EditText('auto', text='bottom')
