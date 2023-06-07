@@ -3,6 +3,7 @@ Collections of Glyphsapp Script
 
 ## Contextual Kerning
 A collection of scripts to calculate and avoid below shape collisions in **Javanese**, **Balinese**, and **Kawi** scripts. You can try the script with this font [Tuladha Jejeg OT](https://github.com/akufadhl/Tuladha-Jejeg-OT)
+
 NOTE: *Works best for a single master file, Glyphsapp don't support Number Values interpolation yet. and it also genereate GPOS error with Fontmake. USE WISELY*
   - **Calculate Kern Feature**
 
