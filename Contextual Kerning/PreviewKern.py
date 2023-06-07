@@ -48,7 +48,7 @@ class kernList:
 			selectionCallback = self.clickCallback,
 			editCallback = self.editKernValue
 		)
-		self.w.language = vanilla.PopUpButton('auto', ['javanese', 'balinese'])
+		self.w.language = vanilla.PopUpButton('auto', ['javanese', 'kawi', 'balinese'])
 		self.w.masterSelect = vanilla.PopUpButton("auto", self.getMaster(), callback=self.getMasterId)
 		
 		rules = [
@@ -82,6 +82,8 @@ class kernList:
 					text += f"/ka-bali/suku-bali/{x}{self.belowSplitter(y,'balinese')}/ka-bali/la-bali"
 				if self.w.language.getItem() == 'javanese':
 					text += f"/ka-java/suku-java/{x}{self.belowSplitter(y,'javanese')}/ka-java/la-java"
+				elif self.w.language.getItem() == 'kawi':
+					text += f"/ka-kawi/vowelU-kawi/{x}{self.belowSplitter(y,'kawi')}/la-kawi/ka-kawi"
 
 		font = Glyphs.font
 		if font.currentTab:
@@ -100,6 +102,12 @@ class kernList:
 			
 	def belowSplitter(self, glyphname, lang):
 		text = ""
+		if lang == 'kawi':
+			glyph = f"/{glyphname}"
+			listHold = glyph.split('.')
+			listHold.pop()
+			listHold.insert(0, '/virama-kawi')
+			text = "".join(listHold)
 		
 		if lang == 'balinese':
 			glyph = f"/{glyphname}"
@@ -127,10 +135,10 @@ class kernList:
 			value = int(kernList[listId]['value'])
 			kernId = kernList[listId]['id']
 			masterId = font.masters[masterIndex].id
-			font.masters[masterId].setNumberValueValue_forName_(value, kernId)
-			value1 = font.masters[masterId].numberValueValueForName_(kernId)
+			font.masters[masterId].font.masters[self.masterIndex].numbers[kernId] = value
+			value1 = font.masters[masterId].numbers[kernId]
 			print(font.masters[masterId], kernId, value1)
-#			font.features.update()
+			print(len(font.masters[masterId].numbers))
 		except:
 			print(traceback.format_exc())
 
@@ -156,6 +164,7 @@ class kernList:
 		items = []
 		for i, a in enumerate(font.numbers):
 			if a:
+#				name_decoded = self.decodeBase64(a.name)
 				names = a.name.split("_")
 				affected = self.replaceChar(names[0])
 				affecting = self.replaceChar(names[1])
@@ -163,7 +172,7 @@ class kernList:
 					id = a.name,
 					affected = affected,
 					affecting = affecting,
-					value = font.masters[self.masterIndex].numberValueValueForName_(a.name)
+					value = font.masters[self.masterIndex].numbers[a.name]
 				)
 				items.append(newDict)
 		

@@ -12,7 +12,7 @@ class WindowKern():
 		self.w = vanilla.Window((350, 200), "Generate Kern Feature")
 		self.w.group1 = vanilla.Group('auto')
 		self.w.group1.text = vanilla.TextBox('auto','Script :')
-		self.w.group1.popUpButton = vanilla.PopUpButton('auto', ["javanese", "balinese"])
+		self.w.group1.popUpButton = vanilla.PopUpButton('auto', ["javanese", "balinese", "kawi"])
 		self.w.group2 = vanilla.Group('auto')
 		self.w.group2.text2 = vanilla.TextBox('auto','Consonant Anchor :')
 		self.w.group2.editText2 = vanilla.EditText('auto', text='bottom')
@@ -68,7 +68,7 @@ class WindowKern():
 	
 	def convertToDict(self ,alist):
 		newDict = {}
-		for value, name in alist:
+		for mid, value, name in alist:
 			newDict[value] = name
 		
 		return newDict
@@ -96,14 +96,11 @@ class WindowKern():
 					HasDescenders.add(glyph.name)
 		
 		features = set()
+
+		
 		for master in thisFont.masters:
 			letters = []
 			pasangans = []
-			letters = []
-		
-			letter = defaultdict(list)
-			pasangans = []
-			pasangan = defaultdict(list)
 			HasDescenders = set()
 			
 			for glyph in thisFont.glyphs:
@@ -112,38 +109,37 @@ class WindowKern():
 						HasDescenders.add(glyph.name)
 	
 			for glyph in thisFont.glyphs:
-				for layer in glyph.layers:
-					for anchor in layer.anchors:
-						if glyph.category == "Letter" and glyph.export == 1 and glyph.script == script and '.post' not in glyph.name:
-							if anchor.name == anchorConst:
-								letters.append((int(layer.bounds.size.width),glyph.name))
+				layer = glyph.layers[master.id]
+				for anchor in layer.anchors:
+					if glyph.category == "Letter" and glyph.export == 1 and glyph.script == script and '.post' not in glyph.name:
+						if anchor.name == anchorConst:
+							letters.append((master.id, int(layer.bounds.size.width), glyph.name))
 	
-						if glyph.category == "Mark" and glyph.export == 1 and glyph.script == script and '.post' not in glyph.name:
-							if anchor.name == anchorConjunct:
-								pasangans.append((int(layer.anchors[anchorConjunct].position.x) - int(layer.bounds.origin.x), glyph.name))
-			
+					if glyph.category == "Mark" and glyph.export == 1 and glyph.script == script and '.post' not in glyph.name:
+						if anchor.name == anchorConjunct:
+							pasangans.append((master.id, int(layer.anchors[anchorConjunct].position.x) - int(layer.bounds.origin.x), glyph.name))
+
 			letter = self.convertToDict(letters)
 			pasangan = self.convertToDict(pasangans)
-	
+			
 			features = set()
 			for v, w in letter.items():
 				for x, y in pasangan.items():
-					if x > v and (x-v) > int(threshold):
+					if x > v:
 						currentName = f"{w}_{y}"
 						name = self.replaceChar(currentName)
-#						name = self.encodeBase64(currentName)
 						value = int((x - v) + int(threshold))
 						master.setNumberValueValue_forName_(value, name)
-						features.add(f"pos @LetterWithBelow [{w}]' [{y}] <${{{name}}} 0 ${{{name}}} 0>;\n")
-						print(name)
+						featureLine = f"pos @LetterWithBelow [{w}]' [{y}] <${{{name}}} 0 ${{{name}}} 0>;"
+						features.add(featureLine)
+						
 		if len(script) == 0:
 			Message("Select Script First")
 		elif len(features) == 0:
 			Message("No Feature Generated")
 		else:
-		
-		
-			fea = "#End Automatic Script\n lookup contextualKern " + '{\n'+ '\tlookupflag UseMarkFilteringSet [' + " ".join(set(x[1] for x in pasangans)) + '];\n\n' + '\n'.join(features) + '\n} contextualKern;'
+			print(pasangans)
+			fea = "#Automatic Code End\nlookup contextualKern " + '{\n'+ '\tlookupflag UseMarkFilteringSet [' + " ".join(set(x[2] for x in pasangans)) + '];\n\n' + '\n'.join(features) + '\n} contextualKern;'
 			if thisFont.classes["LetterWithBelow"]:
 				thisFont.classes["LetterWithBelow"].code = " ".join(HasDescenders)
 			else:
